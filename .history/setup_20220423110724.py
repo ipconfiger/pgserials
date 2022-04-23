@@ -3,7 +3,7 @@
 from distutils.core import setup
 
 setup(name='pgserials',
-      version='0.0.2',
+      version='0.0.1',
       description='use postgresql to process time serials data',
       author='Alexander.Li',
       author_email='superpowerlee@gmaial.com',
@@ -11,6 +11,6 @@ setup(name='pgserials',
       packages=['pgserials'],
       install_requires=[
           'sqlalchemy>=1.4',
-          'numpy'
+          ''
       ]
       )

@@ -42,7 +42,7 @@ class Query:
         self.start = start if isinstance(start, int) else generate_timestamp(start)
         self.stop = stop if isinstance(stop, int) else generate_timestamp(stop)
         if self.stop <= self.start:
-            raise DefinationError('Stop must be larger than Start')
+            raise DefinationError('Stop must be ')
         self.if_set_range = True
         return self
 

@@ -39,10 +39,10 @@ class Query:
         self.headers = []
 
     def range(self, start='', stop='') -> "Query":
+        if start == '':
+            raise DefinationError('Must specify start value')
         self.start = start if isinstance(start, int) else generate_timestamp(start)
         self.stop = stop if isinstance(stop, int) else generate_timestamp(stop)
-        if self.stop <= self.start:
-            raise DefinationError('Stop must be larger than Start')
         self.if_set_range = True
         return self
 

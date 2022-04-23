@@ -1,5 +1,4 @@
 # coding: utf-8
-
 import json
 import datetime
 from dataclasses import dataclass
@@ -39,10 +38,10 @@ class Query:
         self.headers = []
 
     def range(self, start='', stop='') -> "Query":
+        if start == '':
+            raise DefinationError('Must specify start value')
         self.start = start if isinstance(start, int) else generate_timestamp(start)
         self.stop = stop if isinstance(stop, int) else generate_timestamp(stop)
-        if self.stop <= self.start:
-            raise DefinationError('Stop must be larger than Start')
         self.if_set_range = True
         return self
 
@@ -213,6 +212,7 @@ class Client:
             val = row[3]
             if key != ts:
                 if key != '':
+                    # TODO: 数据压入arrays
                     arrays.append([key, tag_id] + label_vals)
                 key = ts
                 tag_id = _tag_id
@@ -276,7 +276,7 @@ class Client:
             dtype.append((header, 'f8'))
         return np.array([tuple(r) for r in array[1:]], dtype=dtype)
 
-    async def query(self, query: Query, response_type: str = ''):
+    async def query(self, query: Query, response_type: str = Query.csvResponse):
         statement = query.toStatement()
         results = await self.db.execute(statement, query.params)
         if response_type == Query.csvResponse:
@@ -285,8 +285,6 @@ class Client:
             return self.formatArray(query, results)
         if response_type == Query.ndarrayResponse:
             return self.formatNumpy(query, results)
-        return [r for r in results]
-
 
     async def _extends_table(self, bucket: Bucket, year: int, month: int):
         rs = await self.db.execute(text(bucket.partition_tableExists_sql(year, month)))
